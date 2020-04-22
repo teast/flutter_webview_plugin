@@ -96,6 +96,7 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
                 break;
             case "getUserAgent":
                 getUserAgent(call, result);
+                break;
             default:
                 result.notImplemented();
                 break;
