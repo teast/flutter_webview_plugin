@@ -1,4 +1,4 @@
-group 'com.flutter_webview_plugin'
+group 'com.teasts_flutter_webview_plugin'
 version '1.0-SNAPSHOT'
 
 def ANDROIDX_WARNING = "flutterPluginsAndroidXWarning";

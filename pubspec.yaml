@@ -1,22 +1,23 @@
-name: flutter_webview_plugin
+name: teasts_flutter_webview_plugin
 description: Plugin that allow Flutter to communicate with a native Webview.
 authors:
+- Niklas Jansson
 - Hadrien Lejard <hadrien.lejard@gmail.com>
 - Toufik Zitouni <toufiksapps@gmail.com>
 - Pedia <kpedia@163.com>
 - Simon Lightfoot <simon@devangels.london>
 - Rafal Wachol <gorudonu@gmail.com>
-homepage: https://github.com/dart-flitter/flutter_webview_plugin
+homepage: https://github.com/teast/flutter_webview_plugin
 version: 0.3.11
-maintainer: Rafal Wachol (@RafalWachol) 
+maintainer: Niklas Jansson
 
 environment:
   sdk: ">=2.0.0 <3.0.0"
 
 flutter:
   plugin:
-    androidPackage: com.flutter_webview_plugin
-    pluginClass: FlutterWebviewPlugin
+    androidPackage: com.teasts_flutter_webview_plugin
+    pluginClass: TeastsFlutterWebviewPlugin
 
 dependencies:
   flutter:

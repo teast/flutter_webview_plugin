@@ -1,4 +1,4 @@
-package com.flutter_webview_plugin;
+package com.teasts_flutter_webview_plugin;
 
 import android.app.Activity;
 
