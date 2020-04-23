@@ -368,6 +368,7 @@ class WebviewManager {
             String userAgent,
             String url,
             Map<String, String> headers,
+            Map<String, String> cookies,
             boolean withZoom,
             boolean displayZoomControls,
             boolean withLocalStorage,
@@ -438,6 +439,13 @@ class WebviewManager {
 
         if (!scrollBar) {
             webView.setVerticalScrollBarEnabled(false);
+        }
+
+        if (cookies != null) {
+            CookieManager mgr = CookieManager.getInstance();
+            for (Map.Entry<String, String> entry : cookies.entrySet()) {
+                mgr.setCookie(url, entry.getKey() + "=" + entry.getValue());
+            }            
         }
 
         if (headers != null) {

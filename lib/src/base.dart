@@ -144,6 +144,7 @@ class FlutterWebviewPlugin {
   Future<Null> launch(
     String url, {
     Map<String, String> headers,
+    Map<String, String> cookies,
     Set<JavascriptChannel> javascriptChannels,
     bool withJavascript,
     bool clearCache,
@@ -197,6 +198,10 @@ class FlutterWebviewPlugin {
 
     if (headers != null) {
       args['headers'] = headers;
+    }
+
+    if (cookies != null) {
+      args['cookies'] = cookies;
     }
 
     _assertJavascriptChannelNamesAreUnique(javascriptChannels);

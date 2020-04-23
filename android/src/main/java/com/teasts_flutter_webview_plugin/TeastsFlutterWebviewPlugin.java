@@ -124,6 +124,7 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
         boolean supportMultipleWindows = call.argument("supportMultipleWindows");
         boolean appCacheEnabled = call.argument("appCacheEnabled");
         Map<String, String> headers = call.argument("headers");
+        Map<String, String> cookies = call.argument("cookies");
         boolean scrollBar = call.argument("scrollBar");
         boolean allowFileURLs = call.argument("allowFileURLs");
         boolean useWideViewPort = call.argument("useWideViewPort");
@@ -153,6 +154,7 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
                 userAgent,
                 url,
                 headers,
+                cookies,
                 withZoom,
                 displayZoomControls,
                 withLocalStorage,
