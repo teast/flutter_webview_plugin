@@ -369,6 +369,8 @@ class WebviewManager {
             String url,
             Map<String, String> headers,
             Map<String, String> cookies,
+            boolean loadImagesAutomatically,
+            boolean blockNetworkLoads,
             boolean withZoom,
             boolean displayZoomControls,
             boolean withLocalStorage,
@@ -383,6 +385,8 @@ class WebviewManager {
             boolean debuggingEnabled,
             boolean ignoreSSLErrors
     ) {
+        webView.getSettings().setLoadsImagesAutomatically(loadImagesAutomatically);
+        webView.getSettings().setBlockNetworkLoads(blockNetworkLoads);
         webView.getSettings().setJavaScriptEnabled(withJavascript);
         webView.getSettings().setBuiltInZoomControls(withZoom);
         webView.getSettings().setSupportZoom(withZoom);

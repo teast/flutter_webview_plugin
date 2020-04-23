@@ -145,6 +145,8 @@ class FlutterWebviewPlugin {
     String url, {
     Map<String, String> headers,
     Map<String, String> cookies,
+    bool loadImagesAutomatically,
+    bool blockNetworkLoads,
     Set<JavascriptChannel> javascriptChannels,
     bool withJavascript,
     bool clearCache,
@@ -176,6 +178,8 @@ class FlutterWebviewPlugin {
       'clearCache': clearCache ?? false,
       'hidden': hidden ?? false,
       'clearCookies': clearCookies ?? false,
+      'loadImagesAutomatically': loadImagesAutomatically ?? true,
+      'blockNetworkLoads': blockNetworkLoads  ?? false,
       'mediaPlaybackRequiresUserGesture': mediaPlaybackRequiresUserGesture ?? true,
       'enableAppScheme': enableAppScheme ?? true,
       'userAgent': userAgent,
