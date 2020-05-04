@@ -94,6 +94,9 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
             case "cleanCache":
                 cleanCache(result);
                 break;
+            case "getUserAgent":
+                getUserAgent(call, result);
+                break;
             default:
                 result.notImplemented();
                 break;
@@ -270,6 +273,12 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
         result.success(null);
     }
 
+    private void getUserAgent(MethodCall call, final MethodChannel.Result result) {
+        if (webViewManager != null) {
+            webViewManager.getUserAgent(call, result);
+        }
+    }
+    
     private void eval(MethodCall call, final MethodChannel.Result result) {
         if (webViewManager != null) {
             webViewManager.eval(call, result);

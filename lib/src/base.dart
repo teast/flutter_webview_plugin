@@ -282,6 +282,9 @@ class FlutterWebviewPlugin {
   Future<Null> stopLoading() async =>
       await _channel.invokeMethod('stopLoading');
 
+  Future<String> getUserAgent() async =>
+    await _channel.invokeMethod('getUserAgent');
+    
   /// Close all Streams
   void dispose() {
     _onDestroy.close();
@@ -346,7 +349,7 @@ class FlutterWebviewPlugin {
 }
 
 class WebViewStateChanged {
-  WebViewStateChanged(this.type, this.url, this.navigationType);
+  WebViewStateChanged(this.type, this.url, this.navigationType, this.cookie);
 
   factory WebViewStateChanged.fromMap(Map<String, dynamic> map) {
     WebViewState t;
@@ -364,12 +367,13 @@ class WebViewStateChanged {
         t = WebViewState.abortLoad;
         break;
     }
-    return WebViewStateChanged(t, map['url'], map['navigationType']);
+    return WebViewStateChanged(t, map['url'], map['navigationType'], map['cookie']);
   }
 
   final WebViewState type;
   final String url;
   final int navigationType;
+  final String cookie;
 }
 
 class WebViewHttpError {

@@ -485,6 +485,10 @@ class WebviewManager {
         });
     }
 
+    void getUserAgent(MethodCall call, final MethodChannel.Result result) {
+        result.success(webView.getSettings().getUserAgentString());
+    }
+
     /**
      * Reloads the Webview.
      */

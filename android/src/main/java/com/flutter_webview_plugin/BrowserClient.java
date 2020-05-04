@@ -51,8 +51,10 @@ public class BrowserClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
+        String cookie = CookieManager.getInstance().getCookie(url);
         Map<String, Object> data = new HashMap<>();
         data.put("url", url);
+        data.put("cookie", cookie);
 
         FlutterWebviewPlugin.channel.invokeMethod("onUrlChanged", data);
 
