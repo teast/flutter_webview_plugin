@@ -125,6 +125,8 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
         boolean appCacheEnabled = call.argument("appCacheEnabled");
         Map<String, String> headers = call.argument("headers");
         Map<String, String> cookies = call.argument("cookies");
+        boolean loadImagesAutomatically = call.argument("loadImagesAutomatically");
+        boolean blockNetworkLoads = call.argument("blockNetworkLoads");
         boolean scrollBar = call.argument("scrollBar");
         boolean allowFileURLs = call.argument("allowFileURLs");
         boolean useWideViewPort = call.argument("useWideViewPort");
@@ -155,6 +157,8 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
                 url,
                 headers,
                 cookies,
+                loadImagesAutomatically,
+                blockNetworkLoads,
                 withZoom,
                 displayZoomControls,
                 withLocalStorage,
