@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
         flutterWebViewPlugin.onStateChanged.listen((WebViewStateChanged state) {
       if (mounted) {
         setState(() {
-          _history.add('onStateChanged: ${state.type} ${state.url}');
+          _history.add('onStateChanged: ${state.type} ${state.url} cookie: ™${state.cookie}^');
         });
       }
     });
@@ -257,6 +257,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               child: const Text('Open widget webview'),
             ),
+            RaisedButton(
+              onPressed: () async {
+                final usrAgent = await flutterWebViewPlugin.getUserAgent();
+                setState(() => _history.add(usrAgent));
+              },
+              child: const Text('get user agent'),
+            ),
             Container(
               padding: const EdgeInsets.all(24.0),
               child: TextField(controller: _codeCtrl),
@@ -275,7 +282,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             RaisedButton(
               onPressed: () {
-                final future = flutterWebViewPlugin.evalJavascript('alert("Hello World");');
+                final future = flutterWebViewPlugin
+                    .evalJavascript('alert("Hello World");');
                 future.then((String result) {
                   setState(() {
                     _history.add('eval: $result');
@@ -302,6 +310,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
               child: const Text('Cookies'),
+            ),
+            RaisedButton(
+              onPressed: () {
+                setState(() {
+                  _history.clear();
+                });
+              },
+              child: const Text('Clear logs'),
             ),
             Text(_history.join('\n'))
           ],

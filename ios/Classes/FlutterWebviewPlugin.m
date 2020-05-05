@@ -10,6 +10,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     NSString* _invalidUrlRegex;
     NSMutableSet* _javaScriptChannelNames;
     NSNumber*  _ignoreSSLErrors;
+    NSMutableDictionary* _all_cookies;
 }
 @end
 
@@ -97,7 +98,8 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     _invalidUrlRegex = call.arguments[@"invalidUrlRegex"];
     _ignoreSSLErrors = call.arguments[@"ignoreSSLErrors"];
     _javaScriptChannelNames = [[NSMutableSet alloc] init];
-    
+    _all_cookies = [[NSMutableDictionary alloc]init];
+
     WKUserContentController* userContentController = [[WKUserContentController alloc] init];
     if ([call.arguments[@"javascriptChannelNames"] isKindOfClass:[NSArray class]]) {
         NSArray* javaScriptChannelNames = call.arguments[@"javascriptChannelNames"];
@@ -193,6 +195,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 
 - (void)navigate:(FlutterMethodCall*)call {
     if (self.webview != nil) {
+            _all_cookies = [[NSMutableDictionary alloc]init];
             NSString *url = call.arguments[@"url"];
             NSNumber *withLocalUrl = call.arguments[@"withLocalUrl"];
             if ( [withLocalUrl boolValue]) {
@@ -435,7 +438,43 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 }
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    [channel invokeMethod:@"onState" arguments:@{@"type": @"finishLoad", @"url": webView.URL.absoluteString}];
+    if (@available(iOS 11.0, *)) {
+        WKHTTPCookieStore *cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
+        [cookieStore getAllCookies:^(NSArray<NSHTTPCookie *> *cookies) {
+           NSHTTPCookie *cookie;
+           //NSMutableDictionary *rcookies = [[NSMutableDictionary alloc]init];
+            NSMutableString *rcookies = [[NSMutableString alloc]init];
+           for(cookie in cookies){
+               //NSLog(@"cookie1: %@", cookie);
+               //[rcookies setObject:cookie.value forKey:cookie.name];
+               [rcookies appendString:[NSString stringWithFormat:@"%@=%@; ", cookie.name, cookie.value]];
+           }
+            
+           [channel invokeMethod:@"onState" arguments:@{@"type": @"finishLoad", @"url": webView.URL.absoluteString, @"cookie": rcookies}];
+
+    }];
+    }
+    else {
+        webView.configuration.processPool = [[WKProcessPool alloc] init];
+        NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+        NSHTTPCookie *cookie;
+        NSMutableString *rcookies = [[NSMutableString alloc]init];
+
+        for(cookie in storage.cookies){
+            //NSLog(@"cookie1: %@", cookie);
+            //[rcookies setObject:cookie.value forKey:cookie.name];
+            [_all_cookies setObject:cookie.value forKey:cookie.name];
+        }
+        
+        id key;
+        NSEnumerator* enumerator = [_all_cookies keyEnumerator];
+        while ((key = [enumerator nextObject])) {
+            id value = [_all_cookies objectForKey:key];
+            [rcookies appendString:[NSString stringWithFormat:@"%@=%@; ", key, value]];
+        }
+
+        [channel invokeMethod:@"onState" arguments:@{@"type": @"finishLoad", @"url": webView.URL.absoluteString, @"cookie": rcookies}];
+    }
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
@@ -445,7 +484,17 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     if ([navigationResponse.response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse * response = (NSHTTPURLResponse *)navigationResponse.response;
+        
+        if (@available(iOS 11.0, *)) {
+        } else {
+            NSArray<NSHTTPCookie *> *cookies;
+            cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:response.allHeaderFields forURL:response.URL];
 
+            for(NSHTTPCookie *cookie in cookies) {
+                [_all_cookies setObject:cookie.value forKey:cookie.name];
+            }
+        }
+        
         if (response.statusCode >= 400) {
             [channel invokeMethod:@"onHttpError" arguments:@{@"code": [NSString stringWithFormat:@"%ld", response.statusCode], @"url": webView.URL.absoluteString}];
         }
