@@ -308,7 +308,11 @@ class FlutterWebviewPlugin {
   }
 
   Future<Map<String, String>> getCookies() async {
-    final cookiesString = await evalJavascript('document.cookie');
+    var cookiesString = await _channel.invokeMethod('getCookies');
+
+    if (cookiesString?.isNotEmpty == false) 
+      cookiesString = await evalJavascript('document.cookie');
+
     final cookies = <String, String>{};
 
     if (cookiesString?.isNotEmpty == true) {

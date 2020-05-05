@@ -44,6 +44,18 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     } else if ([@"close" isEqualToString:call.method]) {
         [self closeWebView];
         result(nil);
+    } else if ([@"getCookies" isEqualToString:call.method]) {
+        NSMutableString *cookies = [[NSMutableString alloc]init];
+        if (_all_cookies.count > 0) {
+            id key;
+            NSEnumerator* enumerator = [_all_cookies keyEnumerator];
+            while ((key = [enumerator nextObject])) {
+                id value = [_all_cookies objectForKey:key];
+                [cookies appendString:[NSString stringWithFormat:@"%@%@=%@", cookies.length > 0 ? @"; " : @"", key, value]];
+            }
+        }
+
+        result(cookies);
     } else if ([@"eval" isEqualToString:call.method]) {
         [self evalJavascript:call completionHandler:^(NSString * response) {
             result(response);
@@ -447,11 +459,12 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
            for(cookie in cookies){
                //NSLog(@"cookie1: %@", cookie);
                //[rcookies setObject:cookie.value forKey:cookie.name];
-               [rcookies appendString:[NSString stringWithFormat:@"%@=%@; ", cookie.name, cookie.value]];
+               //[rcookies appendString:[NSString stringWithFormat:@"%@=%@; ", cookie.name, cookie.value]];
+               [rcookies appendString:[NSString stringWithFormat:@"%@%@=%@", rcookies.length > 0 ? @"; " : @"", cookie.name, cookie.value]];
+               [self->_all_cookies setObject:cookie.value forKey:cookie.name];
            }
             
            [channel invokeMethod:@"onState" arguments:@{@"type": @"finishLoad", @"url": webView.URL.absoluteString, @"cookie": rcookies}];
-
     }];
     }
     else {
@@ -470,7 +483,7 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
         NSEnumerator* enumerator = [_all_cookies keyEnumerator];
         while ((key = [enumerator nextObject])) {
             id value = [_all_cookies objectForKey:key];
-            [rcookies appendString:[NSString stringWithFormat:@"%@=%@; ", key, value]];
+            [rcookies appendString:[NSString stringWithFormat:@"%@%@=%@", rcookies.length > 0 ? @"; " : @"", key, value]];
         }
 
         [channel invokeMethod:@"onState" arguments:@{@"type": @"finishLoad", @"url": webView.URL.absoluteString, @"cookie": rcookies}];
