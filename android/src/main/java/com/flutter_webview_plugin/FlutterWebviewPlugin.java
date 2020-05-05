@@ -94,6 +94,9 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
             case "cleanCache":
                 cleanCache(result);
                 break;
+            case "getCookies":
+                getCookies(call, result);
+                break;
             case "getUserAgent":
                 getUserAgent(call, result);
                 break;
@@ -277,6 +280,12 @@ public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.A
 
         }
         result.success(null);
+    }
+
+    private void getCookies(MethodCall call, final MethodChannel.Result result) {
+        if (webViewManager != null) {
+            webViewManager.getCookies(call, result);
+        }
     }
 
     private void getUserAgent(MethodCall call, final MethodChannel.Result result) {

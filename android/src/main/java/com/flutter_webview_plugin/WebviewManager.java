@@ -497,6 +497,10 @@ class WebviewManager {
         });
     }
 
+    void getCookies(MethodCall call, final MethodChannel.Result result) {
+        result.success(CookieManager.getInstance().getCookie(webView.getUrl()));
+    }
+
     void getUserAgent(MethodCall call, final MethodChannel.Result result) {
         result.success(webView.getSettings().getUserAgentString());
     }
