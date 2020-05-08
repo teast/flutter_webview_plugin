@@ -291,8 +291,15 @@ class FlutterWebviewPlugin {
   Future<Null> stopLoading() async =>
       await _channel.invokeMethod('stopLoading');
 
-  Future<String> getUserAgent() async =>
-    await evalJavascript('window.navigator.userAgent');
+  Future<String> getUserAgent() async {
+    final agent = await evalJavascript('window.navigator.userAgent');
+    if ((agent??'').isEmpty) return agent;
+
+    final start = agent.startsWith('"') ? 1 : 0;
+    final end = agent.endsWith('"') ? agent.length - 1 : agent.length;
+
+    return agent.substring(start, end);
+  }
     
   /// Close all Streams
   void dispose() {
