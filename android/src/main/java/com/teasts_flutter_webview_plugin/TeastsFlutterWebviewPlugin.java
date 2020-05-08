@@ -94,6 +94,9 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
             case "cleanCache":
                 cleanCache(result);
                 break;
+            case "getCookies":
+                getCookies(call, result);
+                break;
             case "getUserAgent":
                 getUserAgent(call, result);
                 break;
@@ -279,12 +282,18 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
         result.success(null);
     }
 
+    private void getCookies(MethodCall call, final MethodChannel.Result result) {
+        if (webViewManager != null) {
+            webViewManager.getCookies(call, result);
+        }
+    }
+
     private void getUserAgent(MethodCall call, final MethodChannel.Result result) {
         if (webViewManager != null) {
             webViewManager.getUserAgent(call, result);
         }
     }
-
+    
     private void eval(MethodCall call, final MethodChannel.Result result) {
         if (webViewManager != null) {
             webViewManager.eval(call, result);

@@ -291,8 +291,15 @@ class FlutterWebviewPlugin {
   Future<Null> stopLoading() async =>
       await _channel.invokeMethod('stopLoading');
 
-  Future<String> getUserAgent() async =>
-    await _channel.invokeMethod('getUserAgent');
+  Future<String> getUserAgent() async {
+    final agent = await evalJavascript('window.navigator.userAgent');
+    if ((agent??'').isEmpty) return agent;
+
+    final start = agent.startsWith('"') ? 1 : 0;
+    final end = agent.endsWith('"') ? agent.length - 1 : agent.length;
+
+    return agent.substring(start, end);
+  }
     
   /// Close all Streams
   void dispose() {
@@ -308,13 +315,17 @@ class FlutterWebviewPlugin {
   }
 
   Future<Map<String, String>> getCookies() async {
-    final cookiesString = await evalJavascript('document.cookie');
+    var cookiesString = await _channel.invokeMethod('getCookies');
+
+    if (cookiesString?.isNotEmpty == false) 
+      cookiesString = await evalJavascript('document.cookie');
+
     final cookies = <String, String>{};
 
     if (cookiesString?.isNotEmpty == true) {
       cookiesString.split(';').forEach((String cookie) {
         final split = cookie.split('=');
-        cookies[split[0]] = split[1];
+        cookies[split[0].trim()] = split[1];
       });
     }
 
