@@ -1,4 +1,4 @@
-package com.teasts_flutter_webview_plugin;
+package com.flutter_webview_plugin;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
@@ -46,7 +46,7 @@ public class BrowserClient extends WebViewClient {
         Map<String, Object> data = new HashMap<>();
         data.put("url", url);
         data.put("type", "startLoad");
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onState", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onState", data);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class BrowserClient extends WebViewClient {
         data.put("url", url);
         data.put("cookie", cookie);
 
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onUrlChanged", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onUrlChanged", data);
 
         data.put("type", "finishLoad");
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onState", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onState", data);
 
     }
 
@@ -75,7 +75,7 @@ public class BrowserClient extends WebViewClient {
         data.put("url", url);
         data.put("type", isInvalid ? "abortLoad" : "shouldStart");
 
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onState", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onState", data);
         return isInvalid;
     }
 
@@ -88,7 +88,7 @@ public class BrowserClient extends WebViewClient {
         data.put("url", url);
         data.put("type", isInvalid ? "abortLoad" : "shouldStart");
 
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onState", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onState", data);
         return isInvalid;
     }
 
@@ -99,7 +99,7 @@ public class BrowserClient extends WebViewClient {
         Map<String, Object> data = new HashMap<>();
         data.put("url", request.getUrl().toString());
         data.put("code", Integer.toString(errorResponse.getStatusCode()));
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onHttpError", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onHttpError", data);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class BrowserClient extends WebViewClient {
         Map<String, Object> data = new HashMap<>();
         data.put("url", failingUrl);
         data.put("code", Integer.toString(errorCode));
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onHttpError", data);
+        FlutterWebviewPlugin.channel.invokeMethod("onHttpError", data);
     }
 
     private boolean checkInvalidUrl(String url) {

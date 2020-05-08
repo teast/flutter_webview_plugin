@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:teasts_flutter_webview_plugin/src/javascript_channel.dart';
+import 'package:flutter_webview_plugin/src/javascript_channel.dart';
 
 import 'javascript_message.dart';
 

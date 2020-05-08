@@ -4,16 +4,16 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<teasts_flutter_webview_plugin/TeastsFlutterWebviewPlugin.h>)
-#import <teasts_flutter_webview_plugin/TeastsFlutterWebviewPlugin.h>
+#if __has_include(<flutter_webview_plugin/FlutterWebviewPlugin.h>)
+#import <flutter_webview_plugin/FlutterWebviewPlugin.h>
 #else
-@import teasts_flutter_webview_plugin;
+@import flutter_webview_plugin;
 #endif
 
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
-  [TeastsFlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"TeastsFlutterWebviewPlugin"]];
+  [FlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterWebviewPlugin"]];
 }
 
 @end

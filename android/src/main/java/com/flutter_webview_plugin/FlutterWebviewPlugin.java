@@ -1,4 +1,4 @@
-package com.teasts_flutter_webview_plugin;
+package com.flutter_webview_plugin;
 
 
 import android.app.Activity;
@@ -22,9 +22,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.PluginRegistry;
 
 /**
- * TeastsFlutterWebviewPlugin
+ * FlutterWebviewPlugin
  */
-public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.ActivityResultListener {
+public class FlutterWebviewPlugin implements MethodCallHandler, PluginRegistry.ActivityResultListener {
     private Activity activity;
     private WebviewManager webViewManager;
     private Context context;
@@ -35,13 +35,13 @@ public class TeastsFlutterWebviewPlugin implements MethodCallHandler, PluginRegi
     public static void registerWith(PluginRegistry.Registrar registrar) {
         if (registrar.activity() != null) {
             channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-            final TeastsFlutterWebviewPlugin instance = new TeastsFlutterWebviewPlugin(registrar.activity(), registrar.activeContext());
+            final FlutterWebviewPlugin instance = new FlutterWebviewPlugin(registrar.activity(), registrar.activeContext());
             registrar.addActivityResultListener(instance);
             channel.setMethodCallHandler(instance);
         }
     }
 
-    TeastsFlutterWebviewPlugin(Activity activity, Context context) {
+    FlutterWebviewPlugin(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
     }

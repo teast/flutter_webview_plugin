@@ -1,4 +1,4 @@
-package com.teasts_flutter_webview_plugin;
+package com.flutter_webview_plugin;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -152,7 +152,7 @@ class WebviewManager {
                             if (webView.canGoBack()) {
                                 webView.goBack();
                             } else {
-                                TeastsFlutterWebviewPlugin.channel.invokeMethod("onBack", null);
+                                FlutterWebviewPlugin.channel.invokeMethod("onBack", null);
                             }
                             return true;
                     }
@@ -166,10 +166,10 @@ class WebviewManager {
             public void onScroll(int x, int y, int oldx, int oldy) {
                 Map<String, Object> yDirection = new HashMap<>();
                 yDirection.put("yDirection", (double) y);
-                TeastsFlutterWebviewPlugin.channel.invokeMethod("onScrollYChanged", yDirection);
+                FlutterWebviewPlugin.channel.invokeMethod("onScrollYChanged", yDirection);
                 Map<String, Object> xDirection = new HashMap<>();
                 xDirection.put("xDirection", (double) x);
-                TeastsFlutterWebviewPlugin.channel.invokeMethod("onScrollXChanged", xDirection);
+                FlutterWebviewPlugin.channel.invokeMethod("onScrollXChanged", xDirection);
             }
         });
 
@@ -258,7 +258,7 @@ class WebviewManager {
             public void onProgressChanged(WebView view, int progress) {
                 Map<String, Object> args = new HashMap<>();
                 args.put("progress", progress / 100.0);
-                TeastsFlutterWebviewPlugin.channel.invokeMethod("onProgressChanged", args);
+                FlutterWebviewPlugin.channel.invokeMethod("onProgressChanged", args);
             }
 
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
@@ -355,7 +355,7 @@ class WebviewManager {
     private void registerJavaScriptChannelNames(List<String> channelNames) {
         for (String channelName : channelNames) {
             webView.addJavascriptInterface(
-                    new JavaScriptChannel(TeastsFlutterWebviewPlugin.channel, channelName, platformThreadHandler), channelName);
+                    new JavaScriptChannel(FlutterWebviewPlugin.channel, channelName, platformThreadHandler), channelName);
         }
     }
 
@@ -478,7 +478,7 @@ class WebviewManager {
         }
 
         closed = true;
-        TeastsFlutterWebviewPlugin.channel.invokeMethod("onDestroy", null);
+        FlutterWebviewPlugin.channel.invokeMethod("onDestroy", null);
     }
 
     void close() {

@@ -170,13 +170,13 @@
       "languageVersion": "2.3"
     },
     {
-      "name": "teasts_flutter_webview_plugin",
+      "name": "flutter_webview_plugin",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.0"
     }
   ],
-  "generated": "2020-04-21T19:31:43.808577Z",
+  "generated": "2020-05-08T19:08:38.079386Z",
   "generator": "pub",
   "generatorVersion": "2.7.2"
 }
