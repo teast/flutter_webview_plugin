@@ -17,11 +17,11 @@ enum WebViewState { shouldStart, startLoad, finishLoad, abortLoad }
 /// Singleton class that communicate with a Webview Instance
 class FlutterWebviewPlugin {
   factory FlutterWebviewPlugin() {
-    if(_instance == null) {
+    if (_instance == null) {
       const MethodChannel methodChannel = const MethodChannel(_kChannel);
       _instance = FlutterWebviewPlugin.private(methodChannel);
     }
-    return _instance;
+    return _instance!;
   }
 
   @visibleForTesting
@@ -29,7 +29,7 @@ class FlutterWebviewPlugin {
     _channel.setMethodCallHandler(_handleMessages);
   }
 
-  static FlutterWebviewPlugin _instance;
+  static FlutterWebviewPlugin? _instance;
 
   final MethodChannel _channel;
 
@@ -143,34 +143,34 @@ class FlutterWebviewPlugin {
   /// - [ignoreSSLErrors]: use to bypass Android/iOS SSL checks e.g. for self-signed certificates
   Future<Null> launch(
     String url, {
-    Map<String, String> headers,
-    Map<String, String> cookies,
-    bool loadImagesAutomatically,
-    bool blockNetworkLoads,
-    Set<JavascriptChannel> javascriptChannels,
-    bool withJavascript,
-    bool clearCache,
-    bool clearCookies,
-    bool mediaPlaybackRequiresUserGesture,
-    bool hidden,
-    bool enableAppScheme,
-    Rect rect,
-    String userAgent,
-    bool withZoom,
-    bool displayZoomControls,
-    bool withLocalStorage,
-    bool withLocalUrl,
-    String localUrlScope,
-    bool withOverviewMode,
-    bool scrollBar,
-    bool supportMultipleWindows,
-    bool appCacheEnabled,
-    bool allowFileURLs,
-    bool useWideViewPort,
-    String invalidUrlRegex,
-    bool geolocationEnabled,
-    bool debuggingEnabled,
-    bool ignoreSSLErrors,
+    Map<String, String>? headers,
+    Map<String, String>? cookies,
+    bool? loadImagesAutomatically,
+    bool? blockNetworkLoads,
+    Set<JavascriptChannel>? javascriptChannels,
+    bool? withJavascript,
+    bool? clearCache,
+    bool? clearCookies,
+    bool? mediaPlaybackRequiresUserGesture,
+    bool? hidden,
+    bool? enableAppScheme,
+    Rect? rect,
+    String? userAgent,
+    bool? withZoom,
+    bool? displayZoomControls,
+    bool? withLocalStorage,
+    bool? withLocalUrl,
+    String? localUrlScope,
+    bool? withOverviewMode,
+    bool? scrollBar,
+    bool? supportMultipleWindows,
+    bool? appCacheEnabled,
+    bool? allowFileURLs,
+    bool? useWideViewPort,
+    String? invalidUrlRegex,
+    bool? geolocationEnabled,
+    bool? debuggingEnabled,
+    bool? ignoreSSLErrors,
   }) async {
     final args = <String, dynamic>{
       'url': url,
@@ -179,8 +179,9 @@ class FlutterWebviewPlugin {
       'hidden': hidden ?? false,
       'clearCookies': clearCookies ?? false,
       'loadImagesAutomatically': loadImagesAutomatically ?? true,
-      'blockNetworkLoads': blockNetworkLoads  ?? false,
-      'mediaPlaybackRequiresUserGesture': mediaPlaybackRequiresUserGesture ?? true,
+      'blockNetworkLoads': blockNetworkLoads ?? false,
+      'mediaPlaybackRequiresUserGesture':
+          mediaPlaybackRequiresUserGesture ?? true,
       'enableAppScheme': enableAppScheme ?? true,
       'userAgent': userAgent,
       'withZoom': withZoom ?? false,
@@ -235,7 +236,7 @@ class FlutterWebviewPlugin {
   }
 
   /// Execute Javascript inside webview
-  Future<String> evalJavascript(String code) async {
+  Future<String?> evalJavascript(String code) async {
     final res = await _channel.invokeMethod('eval', {'code': code});
     return res;
   }
@@ -257,7 +258,8 @@ class FlutterWebviewPlugin {
   Future<bool> canGoBack() async => await _channel.invokeMethod('canGoBack');
 
   /// Checks if webview can navigate back
-  Future<bool> canGoForward() async => await _channel.invokeMethod('canGoForward');
+  Future<bool> canGoForward() async =>
+      await _channel.invokeMethod('canGoForward');
 
   /// Navigates forward on the Webview.
   Future<Null> goForward() async => await _channel.invokeMethod('forward');
@@ -272,7 +274,7 @@ class FlutterWebviewPlugin {
   Future<Null> clearCache() async => await _channel.invokeMethod('cleanCache');
 
   // Reload webview with a url
-  Future<Null> reloadUrl(String url, {Map<String, String> headers}) async {
+  Future<Null> reloadUrl(String url, {Map<String, String>? headers}) async {
     final args = <String, dynamic>{'url': url};
     if (headers != null) {
       args['headers'] = headers;
@@ -283,7 +285,8 @@ class FlutterWebviewPlugin {
   // Clean cookies on WebView
   Future<Null> cleanCookies() async {
     // one liner to clear javascript cookies
-    await evalJavascript('document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });');
+    await evalJavascript(
+        'document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });');
     return await _channel.invokeMethod('cleanCookies');
   }
 
@@ -293,14 +296,16 @@ class FlutterWebviewPlugin {
 
   Future<String> getUserAgent() async {
     final agent = await evalJavascript('window.navigator.userAgent');
-    if ((agent??'').isEmpty) return agent;
+    if ((agent ?? '').isEmpty) {
+      return agent ?? '';
+    }
 
-    final start = agent.startsWith('"') ? 1 : 0;
+    final start = agent!.startsWith('"') ? 1 : 0;
     final end = agent.endsWith('"') ? agent.length - 1 : agent.length;
 
     return agent.substring(start, end);
   }
-    
+
   /// Close all Streams
   void dispose() {
     _onDestroy.close();
@@ -317,7 +322,7 @@ class FlutterWebviewPlugin {
   Future<Map<String, String>> getCookies() async {
     var cookiesString = await _channel.invokeMethod('getCookies');
 
-    if (cookiesString?.isNotEmpty == false) 
+    if (cookiesString?.isNotEmpty == false)
       cookiesString = await evalJavascript('document.cookie');
 
     final cookies = <String, String>{};
@@ -344,7 +349,7 @@ class FlutterWebviewPlugin {
     await _channel.invokeMethod('resize', args);
   }
 
-  Set<String> _extractJavascriptChannelNames(Set<JavascriptChannel> channels) {
+  Set<String> _extractJavascriptChannelNames(Set<JavascriptChannel>? channels) {
     final Set<String> channelNames = channels == null
         // ignore: prefer_collection_literals
         ? Set<String>()
@@ -354,12 +359,14 @@ class FlutterWebviewPlugin {
 
   void _handleJavascriptChannelMessage(
       final String channelName, final String message) {
-    _javascriptChannels[channelName]
-        .onMessageReceived(JavascriptMessage(message));
+    if (_javascriptChannels.containsKey(channelName)) {
+      _javascriptChannels[channelName]!
+          .onMessageReceived(JavascriptMessage(message));
+    }
   }
 
   void _assertJavascriptChannelNamesAreUnique(
-      final Set<JavascriptChannel> channels) {
+      final Set<JavascriptChannel>? channels) {
     if (channels == null || channels.isEmpty) {
       return;
     }
@@ -372,7 +379,7 @@ class WebViewStateChanged {
   WebViewStateChanged(this.type, this.url, this.navigationType, this.cookie);
 
   factory WebViewStateChanged.fromMap(Map<String, dynamic> map) {
-    WebViewState t;
+    WebViewState? t;
     switch (map['type']) {
       case 'shouldStart':
         t = WebViewState.shouldStart;
@@ -387,7 +394,8 @@ class WebViewStateChanged {
         t = WebViewState.abortLoad;
         break;
     }
-    return WebViewStateChanged(t, map['url'], map['navigationType'], map['cookie']);
+    return WebViewStateChanged(
+        t!, map['url'], map['navigationType'], map['cookie']);
   }
 
   final WebViewState type;
